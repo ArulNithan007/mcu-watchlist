@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { api } from './api'
 import Login from './components/Login'
 import Checklist from './components/Checklist'
 import Leaderboard from './components/Leaderboard'
@@ -16,7 +17,7 @@ export default function App() {
   }, [user])
 
   async function fetchProgress() {
-    const res = await fetch(`/api/progress/${user.id}`)
+    const res = await api(`/api/progress/${user.id}`)
     const data = await res.json()
     setWatched(data.map(p => p.item_id))
   }
@@ -35,14 +36,14 @@ export default function App() {
   async function toggleWatched(itemId) {
     const isWatched = watched.includes(itemId)
     if (isWatched) {
-      await fetch('/api/progress', {
+      await api('/api/progress', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, itemId })
       })
       setWatched(prev => prev.filter(id => id !== itemId))
     } else {
-      await fetch('/api/progress', {
+      await api('/api/progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.id, itemId })
@@ -67,16 +68,12 @@ export default function App() {
       </header>
 
       <div className="flex border-b border-gray-800 bg-[#141414]">
-        <button
-          onClick={() => setTab('checklist')}
-          className={`px-6 py-3 text-sm font-medium transition ${tab === 'checklist' ? 'text-red-500 border-b-2 border-red-500' : 'text-gray-400 hover:text-white'}`}
-        >
+        <button onClick={() => setTab('checklist')}
+          className={`px-6 py-3 text-sm font-medium transition ${tab === 'checklist' ? 'text-red-500 border-b-2 border-red-500' : 'text-gray-400 hover:text-white'}`}>
           My Watchlist
         </button>
-        <button
-          onClick={() => setTab('leaderboard')}
-          className={`px-6 py-3 text-sm font-medium transition ${tab === 'leaderboard' ? 'text-red-500 border-b-2 border-red-500' : 'text-gray-400 hover:text-white'}`}
-        >
+        <button onClick={() => setTab('leaderboard')}
+          className={`px-6 py-3 text-sm font-medium transition ${tab === 'leaderboard' ? 'text-red-500 border-b-2 border-red-500' : 'text-gray-400 hover:text-white'}`}>
           Friends
         </button>
       </div>

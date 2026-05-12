@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { api } from '../api'
 
 export default function Login({ onLogin }) {
   const [name, setName] = useState('')
@@ -11,7 +12,7 @@ export default function Login({ onLogin }) {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/users/login', {
+      const res = await api('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: name.trim() })
